@@ -360,12 +360,17 @@ function renderSVGOnly(){
   }
   s+='<defs><filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>';
   s+='</g>';
-  // Legend
-  s+='<g transform="translate(16,12)">';
+  // Legend — only show types actually used
+  var usedTypes={};
+  for(var ui=0;ui<cs.length;ui++){usedTypes[cs[ui].type]=true}
   var ccKeys=Object.keys(CC);
+  var legendIdx=0;
+  s+='<g transform="translate(16,12)">';
   for(var ci=0;ci<ccKeys.length;ci++){
     var k=ccKeys[ci],v=CC[k];
-    s+='<g transform="translate(0,'+(ci*16)+')"><line x1="0" y1="0" x2="16" y2="0" stroke="'+v+'" stroke-width="2.5"/><text x="20" y="4" fill="#aaa" font-size="9">'+k+'</text></g>';
+    if(!usedTypes[k])continue;
+    s+='<g transform="translate(0,'+(legendIdx*16)+')"><line x1="0" y1="0" x2="16" y2="0" stroke="'+v+'" stroke-width="2.5"/><text x="20" y="4" fill="#aaa" font-size="9">'+k+'</text></g>';
+    legendIdx++;
   }
   s+='</g>';
   svg.innerHTML=s;
